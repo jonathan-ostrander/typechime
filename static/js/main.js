@@ -2,7 +2,13 @@
 
 var socket = io.connect();
 
-$(function () {loadMIDI()});
+$(function () {
+	loadMIDI();
+});
+
+var CHORDS = {"4 5 6": "6 8 10", "6 8 10": "7 9 11", "7 9 11": "5 6 8", "5 6 8": "17 7 9", "17 7 9": "4 5 6"};
+var curChord = "4 5 6";
+var chord_changes = bjorklund(1000 + Math.floor(Math.random()*100),250 + Math.floor(Math.random()*100));
 // initialize noteQueue and BPM
 
 var noteQueue = [];
@@ -11,15 +17,19 @@ var key = 'cma';
 var currentScale = scaleCreate('cma')
 var scores = {pos: [0], neg: [0], neu: [1]};
 var last_note_time = 0;
-
+var word_count = 0;
 // Save info from python
 
 socket.on('new_notes', function(msg){
+	if (chord_changes[word_count % chord_changes.length] == 1) {
+		playCurChord();
+	}
 	addNotes(msg['notes']);
 	scores = msg['scores'];
 	if (key != msg['key']) {
 		changeKey(msg['key']);
 	};
+	word_count++;
 });
 
 // Initialize Times
@@ -96,6 +106,20 @@ function addNotes(notes) {
 		MIDI.noteOn(0, note, 150, delay);
 		last_note_time = curTime + delay*1000;
 	}
+}
+
+function playCurChord() {
+	var chordType = curChord.split(" ");
+	console.log(chordType);
+	var chord = [];
+	for(var i=0;i<chordType.length;i++){
+		chord.push(currentScale[chordType[i]] - 12);
+	}
+	curTime = new Date().getTime();
+	console.log(chord);
+	delay = (last_note_time != 0 ? (last_note_time - curTime)/1000 + 60/currentBPM : 0);
+	MIDI.chordOn(1, chord, 400, delay);
+	curChord = CHORDS[curChord];
 }
 
 function addRest() {
