@@ -2,7 +2,7 @@ import sys
 import nltk
 
 def new_word(msg,d):
-    word = msg['word']
+    word = msg['word'].lower()
     scores = msg['scores']
     scores_up = word_semantic(word,scores) #calc pos,neg, neu values
     key = tone_to_key(scores_up) #convert pos,neg,neu values to key
@@ -36,7 +36,7 @@ def word_semantic(word,scores):
         scores['neu'].append(oa)
         
         #start to delete old numbers from rolling average after accumulating 10 words
-        if len(scores['pos']) > 10 or (len(scores['neu']) == 2 and scores['neu'][0]==1):
+        if len(scores['pos']) > 5 or (len(scores['neu']) == 2 and scores['neu'][0]==1):
             scores['pos'].pop(0)
             scores['neg'].pop(0)
             scores['neu'].pop(0)

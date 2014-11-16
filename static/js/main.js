@@ -4,15 +4,16 @@ var socket = io.connect();
 
 $(function () {
 	loadMIDI();
+	$("textarea").autosize();
 });
 
 var CHORDS = {"4 5 6": "6 8 10", "6 8 10": "7 9 11", "7 9 11": "5 6 8", "5 6 8": "17 7 9", "17 7 9": "4 5 6"};
 var curChord = "4 5 6";
-var chord_changes = bjorklund(1000 + Math.floor(Math.random()*100),250 + Math.floor(Math.random()*100));
+var chord_changes = bjorklund(1000 + Math.floor(Math.random()*100),300 + Math.floor(Math.random()*100));
 // initialize noteQueue and BPM
 
 var noteQueue = [];
-var currentBPM = 110;
+var currentBPM = 400;
 var key = 'cma';
 var currentScale = scaleCreate('cma')
 var scores = {pos: [0], neg: [0], neu: [1]};
@@ -49,14 +50,12 @@ function checkCPM() {
     }
 
     iLastTime = iTime;
-    console.log(cpm);
     return cpm;
 }
 
 function cpmToBPM(cpm) {
-	var bpm = 66.03*Math.log(0.0442*cpm);
-	console.log(bpm);
-	return (bpm < 60 ? 60 : bpm)
+	var bpm = 1.5*cpm;
+	return (bpm < 100 ? 100 : bpm)
 }
 
 function changeTempo() {
@@ -79,13 +78,16 @@ function changeTempo() {
 // emit event when last input was space
 
 $("#maininp").on('input', function() {
-	if ($(this).val().substr(-1,1) === " ") {
+	if ($(this).val().substr(-1,1) === " " || $(this).val().substr(-1,1) === "\n") {
+		if ($("h2")) {
+			$("h2").remove();
+		}
 		var cur_str = $(this).val().replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
 		var last_word = cur_str.split(" ").slice(-2)[0];
 		addRest();
 		socket.emit('new_word', {word:last_word,scores:scores});
 	}
-	if ($(this).val().substr(-1,1) === ".") {
+	if ($(this).val().substr(-1,1) === "." || $(this).val().substr(-1,1) === "\n") {
 		currentBPM = changeTempo();
 	}
 });
@@ -110,13 +112,11 @@ function addNotes(notes) {
 
 function playCurChord() {
 	var chordType = curChord.split(" ");
-	console.log(chordType);
 	var chord = [];
 	for(var i=0;i<chordType.length;i++){
 		chord.push(currentScale[chordType[i]] - 12);
 	}
 	curTime = new Date().getTime();
-	console.log(chord);
 	delay = (last_note_time != 0 ? (last_note_time - curTime)/1000 + 60/currentBPM : 0);
 	MIDI.chordOn(1, chord, 400, delay);
 	curChord = CHORDS[curChord];
