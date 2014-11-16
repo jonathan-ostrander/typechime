@@ -1,21 +1,22 @@
-from flask import Flask, render_template
-from flask.ext.socketio import SocketIO, emit
+from flask import Flask, render_template, request, jsonify
 from WordToNotes import new_word
 from nltk.corpus import cmudict
+import ast
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+app.debug = True
 d = cmudict.dict()
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@socketio.on('new_word')
-def send_notes(msg):
+@app.route('/new_word')
+def send_notes():
+	msg = ast.literal_eval(request.args.keys()[0])
 	key, notes, scores = new_word(msg,d)
-	emit('new_notes', {'key': key, 'notes': notes, 'scores': scores})
+	return jsonify(**{'key': key, 'notes': notes, 'scores': scores})
 
 if __name__ == '__main__':
-    socketio.run(app)
+    Flask.run(app)

@@ -1,7 +1,3 @@
-// Connect to socketio instance
-
-var socket = io.connect();
-
 $(function () {
 	loadMIDI();
 	$("textarea").autosize();
@@ -19,19 +15,6 @@ var currentScale = scaleCreate('cma')
 var scores = {pos: [0], neg: [0], neu: [1]};
 var last_note_time = 0;
 var word_count = 0;
-// Save info from python
-
-socket.on('new_notes', function(msg){
-	if (chord_changes[word_count % chord_changes.length] == 1) {
-		playCurChord();
-	}
-	addNotes(msg['notes']);
-	scores = msg['scores'];
-	if (key != msg['key']) {
-		changeKey(msg['key']);
-	};
-	word_count++;
-});
 
 // Initialize Times
 
@@ -85,7 +68,23 @@ $("#maininp").on('input', function() {
 		var cur_str = $(this).val().replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
 		var last_word = cur_str.split(" ").slice(-2)[0];
 		addRest();
-		socket.emit('new_word', {word:last_word,scores:scores});
+		var data = JSON.stringify({word:last_word,scores:scores});
+		$.ajax({  
+			dataType: "json",
+			contentType: "application/json",
+  			url: '/new_word',
+  			data: data
+  		}).done(function(data) {
+			if (chord_changes[word_count % chord_changes.length] == 1) {
+				playCurChord();
+			}
+			addNotes(data['notes']);
+			scores = data['scores'];
+			if (key != data['key']) {
+			changeKey(data['key']);
+			};
+			word_count++;
+  		});
 	}
 	if ($(this).val().substr(-1,1) === "." || $(this).val().substr(-1,1) === "\n") {
 		currentBPM = changeTempo();
