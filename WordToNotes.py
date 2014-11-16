@@ -1,15 +1,15 @@
 import sys
 import nltk
-from nltk.corpus import cmudict
 
-def new_word(word,scores):
- 
+def new_word(msg,d):
+    word = msg['word']
+    scores = msg['scores']
     scores_up = word_semantic(word,scores) #calc pos,neg, neu values
     key = tone_to_key(scores_up) #convert pos,neg,neu values to key
-    notes = word_to_notes(word) #get phonemes and convert to notes
+    notes = word_to_notes(word,d) #get phonemes and convert to notes
     return key, notes, scores_up
  
-def word_semantic(word):
+def word_semantic(word,scores):
     good_pos = ['JJ', 'JJR', 'JJS', 'NN', 'NNS', 'RB', 'RBR', 'RBS', 'VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']
     
     part = nltk.pos_tag(nltk.word_tokenize(word)) #get part of speech
@@ -21,7 +21,10 @@ def word_semantic(word):
         pf = [float(pl[i]) for i in range(len(pl)) if ol[i] != 1]
         nf = [float(nl[i]) for i in range(len(nl)) if ol[i] != 1]
         of = [float(ol[i]) for i in range(len(ol)) if ol[i] != 1] 
- 
+        
+        if not pf:
+            return scores
+
         #average values of valid definitions
         pa = sum(pf)/len(pf) if pf else 0
         na = sum(nf)/len(nf) if nf else 0
@@ -37,12 +40,16 @@ def word_semantic(word):
             scores['pos'].pop(0)
             scores['neg'].pop(0)
             scores['neu'].pop(0)
+    return scores
     
-def word_to_notes(word):
+def word_to_notes(word,d):
     bindings = ['ER', 'EH', 'UH', 'AE', 'IH', 'AH', 'UW', 'AO', 'IY', 'OW', 'EY', 'AA', 'AY', 'AW', 'OY']
     notes = []
-    phonemes = cmudict.dict()[word] #use cmudict to convert to phonemes
-    phonemes = phonemes[0] #only take first pronouncation
+    try:
+        phonemes = d[word] #use cmudict to convert to phonemes
+        phonemes = phonemes[0] #only take first pronouncation
+    except KeyError:
+        phonemes = []
     for phoneme in phonemes:
         if len(phoneme) == 3:
             phoneme = phoneme[0:-1]

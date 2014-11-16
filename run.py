@@ -6,18 +6,16 @@ from nltk.corpus import cmudict
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
+d = cmudict.dict()
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@socketio.on('my event')
-def test_message(message):
-    emit('my response', {'data': 'got it!'})
-
 @socketio.on('new_word')
 def send_notes(msg):
-	emit('new_notes', {'scores': new_word(msg['word'])})
+	key, notes, scores = new_word(msg,d)
+	emit('new_notes', {'key': key, 'notes': notes, 'scores': scores})
 
 if __name__ == '__main__':
     socketio.run(app)
