@@ -4,7 +4,7 @@ from nltk.corpus import cmudict
 import ast
 
 app = Flask(__name__)
-app.debug = True
+app.debug = False
 d = cmudict.dict()
 
 @app.route('/')

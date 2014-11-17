@@ -1,5 +1,6 @@
 import sys
 import nltk
+import os
 
 def new_word(msg,d):
     word = msg['word'].lower()
@@ -108,8 +109,12 @@ def get_scores(word):
     neu = []
     
     word = word.lower()
- 
-    with open("/var/www/typechime/typechime/SentiWordNet_3.0.0.txt","r") as f:
+    
+    fname = "./SentiWordNet_3.0.0.txt"
+    if not os.path.isfile(fname):
+        fname = "/var/www/typechime/typechime/SentiWordNet_3.0.0.txt"
+
+    with open(fname,"r") as f:
         for line in f:
             if not line.startswith("#"):
                 cols = split_line(line)
