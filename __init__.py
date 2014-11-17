@@ -4,7 +4,6 @@ from nltk.corpus import cmudict
 import ast
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
 app.debug = True
 d = cmudict.dict()
 
@@ -19,4 +18,4 @@ def send_notes():
 	return jsonify(**{'key': key, 'notes': notes, 'scores': scores})
 
 if __name__ == '__main__':
-    Flask.run(app)
+    app.run()

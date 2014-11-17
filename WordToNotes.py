@@ -109,7 +109,7 @@ def get_scores(word):
     
     word = word.lower()
  
-    with open("SentiWordNet_3.0.0.txt","r") as f:
+    with open("/var/www/typechime/typechime/SentiWordNet_3.0.0.txt","r") as f:
         for line in f:
             if not line.startswith("#"):
                 cols = split_line(line)
