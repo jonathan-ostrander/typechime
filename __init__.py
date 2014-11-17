@@ -4,6 +4,7 @@ from nltk.corpus import cmudict
 import ast
 
 app = Flask(__name__)
+app.debug = True
 d = cmudict.dict()
 
 @app.route('/')
@@ -13,7 +14,9 @@ def index():
 @app.route('/new_word')
 def send_notes():
 	msg = ast.literal_eval(request.args.keys()[0])
+	print msg
 	key, notes, scores = new_word(msg,d)
+	print key, notes, scores
 	return jsonify(**{'key': key, 'notes': notes, 'scores': scores})
 
 if __name__ == '__main__':

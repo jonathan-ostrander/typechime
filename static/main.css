@@ -58,5 +58,6 @@ h2 {
   background: rgba(0,0,0,0);
   font-size: 2em;
   color: #ECF0F1;
+  resize: none;
 }
 

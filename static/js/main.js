@@ -1,6 +1,6 @@
-$(function () {
+$(document).ready(function(){
 	loadMIDI();
-	$("textarea").autosize();
+    $('textarea').autosize();    
 });
 
 var CHORDS = {"4 5 6": "6 8 10", "6 8 10": "7 9 11", "7 9 11": "5 6 8", "5 6 8": "17 7 9", "17 7 9": "4 5 6"};
@@ -103,7 +103,7 @@ function addNotes(notes) {
 		note = currentScale[notes[i]];
 		curTime = new Date().getTime();
 		delay = (last_note_time != 0 ? (last_note_time - curTime)/1000 + 60/currentBPM : 0);
-		delay = (delay < 0 ? 0 : delay);
+		delay = Math.max(0,delay);
 		MIDI.noteOn(0, note, 150, delay);
 		last_note_time = curTime + delay*1000;
 	}
