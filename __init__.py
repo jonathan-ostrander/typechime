@@ -4,7 +4,6 @@ from nltk.corpus import cmudict
 import ast
 
 app = Flask(__name__)
-app.debug = True
 d = cmudict.dict()
 
 @app.route('/')
@@ -18,4 +17,4 @@ def send_notes():
 	return jsonify(**{'key': key, 'notes': notes, 'scores': scores})
 
 if __name__ == '__main__':
-    app.run()
+	app.run()

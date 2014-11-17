@@ -1,3 +1,5 @@
 /ENV/*
 *.pyc
 WordToNotes.pyc
+/venv/*
+
