@@ -7,7 +7,7 @@ var CHORDS = {"4 5 6": "6 8 10", "6 8 10": "7 9 11", "7 9 11": "5 6 8", "5 6 8":
 var curChord = "4 5 6";
 var chord_changes = bjorklund(1000 + Math.floor(Math.random()*100),300 + Math.floor(Math.random()*100));
 // initialize noteQueue and BPM
-
+var prev_text = "";
 var noteQueue = [];
 var currentBPM = 400;
 var key = 'cma';
@@ -66,25 +66,34 @@ $("#maininp").on('input', function() {
 			$("h2").remove();
 		}
 		var cur_str = $(this).val().replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
+		var last_words = [];
+		if (cur_str.split(" ").length > prev_text.split(" ").length + 1) {
+			var slicelength = cur_str.split(" ").length - prev_text.split(" ").length;
+			last_words = cur_str.split(" ").slice(-1*slicelength-1,-1);
+		}
 		var last_word = cur_str.split(" ").slice(-2)[0];
-		addRest();
-		var data = JSON.stringify({word:last_word,scores:scores});
-		$.ajax({  
-			dataType: "json",
-			contentType: "application/json",
-  			url: '/new_word',
-  			data: data
-  		}).done(function(data) {
-			if (chord_changes[word_count % chord_changes.length] == 1) {
-				playCurChord();
-			}
-			addNotes(data['notes']);
-			scores = data['scores'];
-			if (key != data['key']) {
-			changeKey(data['key']);
-			};
-			word_count++;
-  		});
+		last_words = (last_words.length > 0 ? last_words : last_word);
+		for (var i=0;i<last_words.length;i++) {
+			addRest();
+			var data = JSON.stringify({word:last_word,scores:scores});
+			$.ajax({  
+				dataType: "json",
+				contentType: "application/json",
+	  			url: '/new_word',
+	  			data: data
+	  		}).done(function(data) {
+				if (chord_changes[word_count % chord_changes.length] == 1) {
+					playCurChord();
+				}
+				addNotes(data['notes']);
+				scores = data['scores'];
+				if (key != data['key']) {
+				changeKey(data['key']);
+				};
+				word_count++;
+	  		});
+	  	}
+	  	prev_text = cur_str;
 	}
 	if ($(this).val().substr(-1,1) === "." || $(this).val().substr(-1,1) === "\n") {
 		currentBPM = changeTempo();
