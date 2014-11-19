@@ -172,6 +172,8 @@ if (window.AudioContext || window.webkitAudioContext) (function () {
 	};
 
 	root.noteOn = function (channel, note, velocity, delay) {
+		if (ctx.currentTime < 0) ctx.currentTime = 0;
+		if (delay < 0) delay = 0;
 		/// check whether the note exists
 		if (!MIDI.channels[channel]) return;
 		var instrument = MIDI.channels[channel].instrument;

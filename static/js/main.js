@@ -72,7 +72,7 @@ $("#maininp").on('input', function() {
 			last_words = cur_str.split(" ").slice(-1*slicelength-1,-1);
 		}
 		var last_word = cur_str.split(" ").slice(-2)[0];
-		last_words = (last_words.length > 0 ? last_words : last_word);
+		last_words = (last_words.length > 0 ? last_words : [last_word]);
 		for (var i=0;i<last_words.length;i++) {
 			addRest();
 			var data = JSON.stringify({word:last_word,scores:scores});
