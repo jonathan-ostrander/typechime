@@ -19,5 +19,9 @@ def send_notes():
 	print key, notes, scores
 	return jsonify(**{'key': key, 'notes': notes, 'scores': scores})
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+	
 if __name__ == '__main__':
 	app.run()

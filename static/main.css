@@ -8,6 +8,21 @@ html, body {
   height: 100%;
   font-family: 'Ubuntu Mono';
   background: #2C3E50;
+  color: #ECF0F1;
+}
+
+a, a:hover {
+	color: #AFEEEE;
+	text-decoration: none;
+}
+
+footer {
+	text-align: center;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	font-size: 2em;
+	background: #2C3E50;
 }
 
 .header-container {
@@ -23,7 +38,7 @@ h1 {
   padding-bottom: 10px;
 }
 
-h2 {
+h2.type {
   -webkit-animation: fade 2s linear infinite;
           animation: fade 2s linear infinite;
 }
@@ -45,6 +60,18 @@ h2 {
   text-align: center;
   background: #E74C3C;
   color: #ECF0F1;
+}
+
+.desc {
+	min-width: 100%;
+	padding: 5%;
+	-moz-box-sizing: border-box;
+    box-sizing: border-box;
+	font-size: 1.5em;
+}
+
+p  {
+	padding: 5px 0;
 }
 
 #maininp, #maininp:focus {

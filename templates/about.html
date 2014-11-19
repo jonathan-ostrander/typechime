@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TypeChi.me</title>
+	<link rel="icon" type="image/ico" href="/static/favicon.ico">
+	<link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+	<a href="https://github.com/OstrichProjects/typechime" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"></a>
+	<div class="header">
+		<div class="header-container">
+			<h1>About typeChi.me</h1>
+			<a href="/"><h2>back to typeChi.me</h2></a>
+  		</div>
+  	</div>
+
+	<div class="desc">
+		<h2 id="typechime-s-code-uses-algorithms-to-generate-background-music-as-you-type-into-a-textbox-">TypeChime&#39;s code uses algorithms to generate background music as you type into a textbox.</h2>
+		<p>typeChi.me was created by <a href="http://jonost.me" target="_blank">Jonathan Ostrander</a> and Jonathon Schad at HackRPI in Fall 2014.</p>
+		<p>-Generating notes: TypeChi.me reads in each word and breaks it down into its phonetic parts. Vowel phonetics is recorded and each assigned a number from 0 to 14 according to the vowel&#39;s pitch when it is spoken<sup><a href="http://thelisteningmachine.org/about" title="The Listening Machine">1</a></sup>. This corresponds to the nth note in whatever scale is being used.</p>
+		<p>-Tempo: Each note is put onto the note queue that plays a quarter note when a note is taken off the queue. Spaces are added once a new word is started to break up the stream of notes. The beats per minute of the music is dynamically based on how fast you type so that the music keeps up with what you are typing.</p>
+		<p>-Key: A major or minor key is assigned to the music based on the semantics of the words currently being used. Each adjective, noun, verb, and adverb is filtered through thousands of movie reviews where it is assigned values for positive and negative connotation and the word&#39;s objectiveness<sup><a href="http://streamhacker.com/2010/05/10/text-classification-sentiment-analysis-naive-bayes-classifier/" title="Text Classification with nltk">2</a></sup>. These values come from teaching the algorithm with the rating of the reviews the word appears in. Different rages of positive, negative, and objective values correspond to different musical keys.</p>
+		<p>-Cords: Background chords are generated on top of the main melody to add depth. A canon cord progression of 8 cords is continually repeated. When the user finishes a word, the program uses a Euclidean Rhythm algorithm to determine if it should switch to the next cord<sup><a href="http://blog.fader.co.uk/post/11519018856/bjorklund-algorithm-and-euclidean-rhythms" title="Generating Rhythms with Euclids GCD Algorithm">3</a></sup>.</p>
+	</div>
+</body>
