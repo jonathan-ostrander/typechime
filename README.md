@@ -19,7 +19,7 @@ From here you will have to download some files in the nltk data package so in py
 
 ```python
 import nltk
-nltk.download
+nltk.download()
 ```
 
 This should bring up a GUI for you to install the correct packages.  Those packages are:
